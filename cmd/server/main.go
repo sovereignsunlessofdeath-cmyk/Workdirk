@@ -22,7 +22,7 @@ func main() {
 	// 1. Environmental fallbacks for your local MySQL database connection string
 	dbConnStr := os.Getenv("DATABASE_URL")
 	if dbConnStr == "" {
-		dbConnStr = "root:@tcp(127.0.0.1:3306)/workdirk?parseTime=true"
+		dbConnStr = "workdirk_user:secret@tcp(127.0.0.1:3306)/workdirk?parseTime=true"
 	}
 
 	serverPort := os.Getenv("PORT")
