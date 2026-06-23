@@ -20,11 +20,14 @@ func main() {
 	log.Println("Initializing Workdirk server with MySQL...")
 
 	// 1. Environmental fallbacks for your local MySQL database connection string
+	// 1. Fetch the database URL from the environment (loaded via godotenv)
 	dbConnStr := os.Getenv("DATABASE_URL")
 	if dbConnStr == "" {
-		dbConnStr = "workdirk_user:secret@tcp(127.0.0.1:3306)/workdirk?parseTime=true"
+		// 🚨 Stop the server immediately if the secret config is missing!
+		log.Fatal("❌ Critical Error: DATABASE_URL environment variable is not set in your .env file!")
 	}
 
+	// Ports are not secrets, so keeping a default fallback here is perfectly fine.
 	serverPort := os.Getenv("PORT")
 	if serverPort == "" {
 		serverPort = ":8080"

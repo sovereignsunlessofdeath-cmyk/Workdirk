@@ -1,0 +1,10 @@
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+server
+
+# Environment variables (avoids pushing passwords to GitHub)
+.env
