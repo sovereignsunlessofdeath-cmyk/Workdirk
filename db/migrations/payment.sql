@@ -1,4 +1,4 @@
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
     id BINARY(16) NOT NULL,
     job_id BINARY(16) NOT NULL,
     customer_id BINARY(16) NOT NULL,

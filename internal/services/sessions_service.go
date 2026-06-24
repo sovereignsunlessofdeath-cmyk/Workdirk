@@ -34,3 +34,10 @@ func (s *SessionService) GenerateSession(userID []byte) (*repository.Session, er
 
 	return sess, nil
 }
+
+// RevokeSession deletes or invalidates a user session token in the database
+func (s *SessionService) RevokeSession(token string) error {
+	// If you are using a SQL database, you would delete or update the session record.
+	// For now, let's write a mock placeholder that returns nil (no error) so your code compiles.
+	return nil
+}

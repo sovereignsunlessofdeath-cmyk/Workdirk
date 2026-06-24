@@ -88,6 +88,10 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
+    mux.HandleFunc("/login", authHandler.Login)
+	mux.HandleFunc("/logout", authHandler.Logout)
+	mux.HandleFunc("/forgot-password", authHandler.ForgotPassword)
+
 	log.Printf("📡 Workdirk Gateway router online! Listening smoothly on port %s", serverPort)
 
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {

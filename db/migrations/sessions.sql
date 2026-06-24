@@ -1,4 +1,4 @@
-CREATE TABLE sessions (
+CREATE TABLE IF NOT EXISTS sessions (
     id BINARY(16) NOT NULL,
     user_id BINARY(16) NOT NULL,
     token VARCHAR(255) NOT NULL,

@@ -20,3 +20,19 @@ type AuthResponse struct {
 	UserID string `json:"user_id"` // Converted to string UUID for the frontend
 	Token  string `json:"token"`
 }
+
+// ForgotPasswordRequest handles the initial email submission
+type ForgotPasswordRequest struct {
+	Email string `json:"email"`
+}
+
+// ResetPasswordRequest handles the actual password update using a token
+type ResetPasswordRequest struct {
+	Token       string `json:"token"`
+	NewPassword string `json:"new_password"`
+}
+
+// LogoutRequest handles token invalidation if you are tracking them on the backend
+type LogoutRequest struct {
+	Token string `json:"token"`
+}
