@@ -1,4 +1,4 @@
-package models
+package model
 
 // SubmitReviewRequest captures incoming worker evaluations.
 type SubmitReviewRequest struct {

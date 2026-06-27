@@ -1,4 +1,4 @@
-package models
+package model
 
 // SessionVerifyRequest parses authorization payloads from client storage.
 type SessionVerifyRequest struct {

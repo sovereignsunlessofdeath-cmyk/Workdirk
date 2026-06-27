@@ -1,4 +1,4 @@
-package models
+package model
 
 // CreateJobRequest captures details required to spin up a work milestone.
 type CreateJobRequest struct {

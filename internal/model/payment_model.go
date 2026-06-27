@@ -1,4 +1,4 @@
-package models
+package model
 
 // InitiateEscrowRequest binds incoming project funding commands.
 type InitiateEscrowRequest struct {

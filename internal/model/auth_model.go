@@ -1,4 +1,12 @@
-package models
+package model
+
+import (
+	//"time"
+	//"github.com/google/uuid"
+	//"gorm.io/gorm"
+	//"gorm.io/gorm/clause"
+	
+)
 
 // RegisterRequest binds incoming registration JSON payloads.
 type RegisterRequest struct {

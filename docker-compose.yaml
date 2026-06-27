@@ -1,35 +1,36 @@
 version: '3.8'
 
 services:
-  server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
     environment:
-      - PORT=:8080
-      # Notice 'db' is used here instead of 127.0.0.1
-      - DATABASE_URL=root:secretpassword@tcp(db:3306)/workdirk?parseTime=true
-    depends_on:
-      db:
-        condition: service_healthy
-
-  db:
-    image: mysql:latest
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: secretpassword
+      MYSQL_ROOT_PASSWORD: Dammy@123
       MYSQL_DATABASE: workdirk
     ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
+      - "3307:3306"
+    networks:
+      - workdirk-net
+    # Ensures MySQL fully initializes before Go tries to connect
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pDammy@123"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-volumes:
-  mysql_data:
+  workdirk-app:
+    build: .
+    container_name: workdirk-app
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=root:Dammy@123@tcp(mysql-db:3306)/workdirk?parseTime=true
+    networks:
+      - workdirk-net
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+
+networks:
+  workdirk-net:
+    driver: bridge

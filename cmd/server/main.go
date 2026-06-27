@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/joho/godotenv"
+
 	"workdirk/db"
 	"workdirk/gateway/router"
 	"workdirk/internal/handlers"
@@ -13,25 +15,28 @@ import (
 	"workdirk/internal/services"
 )
 
-// ============================================================================
-// STANDALONE FUNCTION: main()
-// ============================================================================
 func main() {
 	log.Println("Initializing Workdirk server with MySQL...")
 
-	// 1. Environmental fallbacks for your local MySQL database connection string
-	// 1. Fetch the database URL from the environment (loaded via godotenv)
+	// 1. Force Go to load the .env file from the current directory first
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Warning: No .env file found, reading from system environment variables")
+	}
+
+	// Fetch the database URL from the environment
 	dbConnStr := os.Getenv("DATABASE_URL")
 	if dbConnStr == "" {
-		// 🚨 Stop the server immediately if the secret config is missing!
 		log.Fatal("❌ Critical Error: DATABASE_URL environment variable is not set in your .env file!")
 	}
 
-	// Ports are not secrets, so keeping a default fallback here is perfectly fine.
+	// Set up server port fallback
 	serverPort := os.Getenv("PORT")
 	if serverPort == "" {
 		serverPort = ":8080"
 	}
+
+	log.Println("✅ Environment loaded successfully. Running configurations...")
 
 	// 2. Open MySQL database connection pool
 	dbConn, err := db.InitDB(dbConnStr)
@@ -71,9 +76,12 @@ func main() {
 	reviewHandler := handlers.NewReviewHandler(reviewService)
 	sessionHandler := handlers.NewSessionHandler(sessionService)
 
-	// 5. Setup Gateway Router routes
+	// ========================================================================
+	// 5. ROUTER & ROUTE DEFINITIONS
+	// ========================================================================
 	mux := router.NewRouter()
 
+	// API Endpoints
 	mux.HandleFunc("/api/v1/auth/register", userHandler.Register)
 	mux.HandleFunc("/api/v1/auth/login", authHandler.Login)
 	mux.HandleFunc("/api/v1/jobs/create", jobHandler.Create)
@@ -81,16 +89,20 @@ func main() {
 	mux.HandleFunc("/api/v1/reviews/leave", reviewHandler.LeaveReview)
 	mux.HandleFunc("/api/v1/sessions/check", sessionHandler.CheckSession)
 
+	// Authentication Endpoints
+	mux.HandleFunc("/login", authHandler.Login)
+	mux.HandleFunc("/logout", authHandler.Logout)
+	mux.HandleFunc("/forgot-password", authHandler.ForgotPassword)
+
+	// ========================================================================
+	// 6. NETWORKING & ENGINE STARTUP
+	// ========================================================================
 	server := &http.Server{
 		Addr:         serverPort,
 		Handler:      mux,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-
-    mux.HandleFunc("/login", authHandler.Login)
-	mux.HandleFunc("/logout", authHandler.Logout)
-	mux.HandleFunc("/forgot-password", authHandler.ForgotPassword)
 
 	log.Printf("📡 Workdirk Gateway router online! Listening smoothly on port %s", serverPort)
 

@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	models "workdirk/internal/model"
+	"workdirk/internal/model"
 	"workdirk/internal/services"
 )
 
@@ -23,7 +23,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var req models.LoginRequest
+	var req model.LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
@@ -36,16 +36,16 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, err := h.sessionSvc.GenerateSession(user.ID)
+	sessions, err := h.sessionSvc.GenerateSession(user.ID)
 	if err != nil {
 		http.Error(w, "Failed to create session", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(models.AuthResponse{
+	json.NewEncoder(w).Encode(model.AuthResponse{
 		UserID: string(user.ID),
-		Token:  session.Token,
+		Token:  sessions.Token,
 	})
 }
 
