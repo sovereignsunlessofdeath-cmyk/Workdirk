@@ -2,12 +2,11 @@ package model
 
 // 1. Core Database Entity Model (Add this!)
 type User struct {
-	ID           string `json:"id"`
-	Name         string `json:"name"`
-	Email        string `json:"email"`
-	PasswordHash string `json:"password_hash"` // Stored as a string in your struct now
-	PhoneNumber  string `json:"phone_number"`
-	Role         string `json:"role"`
+    ID       int    `json:"id" db:"id"`
+    Username string `json:"username" db:"username"`
+    Email    string `json:"email" db:"email"`
+    Password string `json:"password" db:"password"`
+    Phone    string `json:"???" db:"phone"` // <-- We need to see this exact JSON tag!
 }
 
 // UserProfileResponse structures clean user data for account or profile screens.
